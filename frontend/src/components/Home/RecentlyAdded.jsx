@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import BookCard from "../BookCard/BookCard";
+import Loader from "../Loader/Loader";
 
 const RecentlyAdded = () => {
   const [data, setData] = useState([]);
@@ -8,7 +10,7 @@ const RecentlyAdded = () => {
     const fetchBooks = async () => {
       try {
         const response = await axios.get("http://localhost:1000/api/v1/get-recent-books");
-        console.log(response.data.data);
+        setData(response.data.data);
       } catch (error) {
         console.error("Error fetching recent books:", error);
       }
@@ -19,17 +21,12 @@ const RecentlyAdded = () => {
   return (
     <div className="mt-8 px-4">
       <h4 className="text-2xl text-yellow-100 mb-4">Recently Added Books</h4>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {data.length > 0 ? (
-          data.map((book) => (
-            <div key={book._id} className="bg-zinc-800 p-4 rounded-lg shadow-lg">
-              <img src={book.coverImage} alt={book.title} className="w-full h-40 object-cover rounded" />
-              <h5 className="text-lg text-white mt-2">{book.title}</h5>
-              <p className="text-sm text-gray-400">{book.author}</p>
+      {!data && <div className="flex items-center justify-center my-8"><Loader/></div>}
+      <div className="my-4 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-2">
+        {data && data.map((items, i)=>
+          <div key={i}>
+            <BookCard data={items} />{" "}
             </div>
-          ))
-        ) : (
-          <p className="text-gray-400">No recent books available.</p>
         )}
       </div>
     </div>

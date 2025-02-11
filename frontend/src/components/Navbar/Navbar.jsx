@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaGripLines } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const links = [
@@ -10,7 +11,10 @@ const Navbar = () => {
     { title: "Cart", link: "/cart" },
     { title: "Profile", link: "/profile" },
   ];
-
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  if (isLoggedIn == false) {
+    links.splice(2, 2);
+  }
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   return (
