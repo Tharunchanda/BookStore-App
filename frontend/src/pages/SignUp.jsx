@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const SignUp = () => {
+const SignUp = () => { 
   const [values, setValues] = useState({
     username: "",
     email: "",
@@ -44,7 +45,7 @@ const SignUp = () => {
 
     const response = await axios.post("http://localhost:1000/api/v1/sign-up", values);
 
-    alert(response.data.message);
+    toast.success(response.data.message);
     navigate("/login");
   } catch (error) {
     console.error("Sign-up error:", error.response?.data || error);
