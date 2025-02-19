@@ -24,7 +24,7 @@ router.put("/remove-book-from-favourites", authenticateToken, async (req, res) =
          const userData = await User.findById(id);
          const isBookFavourite = userData.favourites.includes(bookid);
          if (isBookFavourite) {
-            await User.findByIdAndDelete(id, { $pull: { favourites: bookid } });
+            await User.findByIdAndUpdate(id, { $pull: { favourites: bookid } });
          }
          return res.status(200).json({ message: "Book removed from Favourites" });
      } catch (error) {
@@ -52,4 +52,4 @@ router.get("/get-favourite-books", authenticateToken, async (req, res) => {
    } 
 });
 
-module.exports = router;
+module.exports = router;        

@@ -3,11 +3,17 @@ import axios from 'axios';
 import Loader from '../Loader/Loader';
 import { useParams } from 'react-router-dom';
 import { GrLanguage } from "react-icons/gr";
+import { FaHeart, FaShoppingCart } from 'react-icons/fa';
+import {MdOutlineDelete} from 'react-icons/md';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const ViewBookDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true); 
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const role = useSelector((state) => state.auth.role);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -23,23 +29,93 @@ const ViewBookDetails = () => {
     fetchBooks();
   }, []);
 
+ const headers = {
+  "id": localStorage.getItem("id"),
+  "authorization": `Bearer ${localStorage.getItem("token")}`,
+  "bookid": id, 
+};
+
+const handleFavourite = async () => {
+  try {
+    const response = await axios.put(
+      "http://localhost:1000/api/v1/add-book-to-favourites",
+      {},
+      { headers }
+    );
+    toast.success(response.data.message);
+  } catch (error) {
+    toast.error("Error adding book to favourites");
+    console.error("Error adding book to favourites:", error.response?.data || error.message);
+  }
+  };
+  
+  const handleCart = async () => {
+    try {
+    const response = await axios.put(
+      "http://localhost:1000/api/v1/add-to-cart",
+      {},
+      { headers }
+    );
+    toast.success(response.data.message);
+  } catch (error) {
+    toast.error("Error adding book to Cart!");
+    console.error("Error adding book to Cart:", error.response?.data || error.message);
+  }
+  };
+
   return (
-    <div className='px-4 lg:px-12 py-8 bg-zinc-900 flex flex-col md:flex-row gap-8'>
-      <div className='bg-zinc-800 rounded p-4 h-[60vh] lg:h-[88vh] w-full lg:w-3/6 flex items-center justify-center'>
-        <img src={data.url} alt="Book img" className='h-[50vh] lg:h-[70vh] rounded'/>
-      </div>
-      <div className='p-4 w-full lg:w-3/6'>
-        <h1 className='text-4xl text-zinc-300 font-semibold'>{data.title}</h1>
-        <p className='text-zinc-400 mt-1'>by {data.author}</p>
-        <p className='text-zinc-500 mt-4 text-0.5xl'>{data.desc}</p>
-        <p className='flex mt-4 items-center justify-start text-zinc-400'>
-          <GrLanguage className='me-3'/>{data.language}
-        </p>
-        <p className="mt-2 text-green-400 font-semibold">₹ {data.price}</p>
-      </div>
+    <>
+      {data && (
+        <div className='px-4 md:px-12 py-8 bg-zinc-900 flex flex-col lg:flex-row gap-8 items-start'>
+          <div className='w-full lg:w-3/6 '>
+            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-around bg-zinc-800 p-6 md:p-10 lg:p-12 rounded-lg gap-8">
+              <img
+                src={data.url}
+                alt="Book img"
+                className="h-[50vh] md:h-[60vh] lg:h-[70vh] rounded-lg object-cover shadow-lg"
+              />
+              {isLoggedIn && role === "user" && (
+                <div className="flex flex-row lg:flex-col items-center justify-center lg:justify-start gap-6">
+                  <button className="bg-white text-red-600 rounded-full p-3 text-2xl flex items-center justify-center shadow-md transition-transform hover:scale-105"
+                  onClick={handleFavourite}>
+                    <FaHeart />
+                    <span className="ml-4 block lg:hidden text-sm font-medium">Favourites</span>
+                  </button>
+                  <button className="bg-blue-500 text-white rounded-full p-3 text-2xl flex items-center justify-center shadow-md transition-transform hover:scale-105"
+                  onClick={handleCart}>
+                    <FaShoppingCart />
+                    <span className="ml-4 block lg:hidden text-sm font-medium">Add to Cart</span>
+                  </button>
+                </div>
+              )}
+              {isLoggedIn && role === "admin" && (
+                <div className="flex flex-row lg:flex-col items-center justify-center lg:justify-start gap-6">
+                  <button className="bg-white rounded-full p-3 text-2xl flex items-center justify-center shadow-md transition-transform hover:scale-105">
+                    <FaEdit/>
+                    <span className="ml-4 block lg:hidden text-sm font-medium">Edit Book</span>
+                  </button>
+                  <button className="bg-white text-red-500 rounded-full p-3 text-2xl flex items-center justify-center shadow-md transition-transform hover:scale-105">
+                    <MdOutlineDelete/>
+                    <span className="ml-4 block lg:hidden text-sm font-medium">Delete Book</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className='p-4 w-full lg:w-3/6'>
+            <h1 className='text-4xl text-zinc-300 font-semibold'>{data.title}</h1>
+            <p className='text-zinc-400 mt-1'>by {data.author}</p>
+            <p className='text-zinc-500 mt-4 text-0.5xl'>{data.desc}</p>
+            <p className='flex mt-4 items-center justify-start text-zinc-400'>
+              <GrLanguage className='me-3'/>{data.language}
+            </p>
+            <p className="mt-2 text-green-400 font-semibold">₹ {data.price}</p>
+          </div>
       
-      <div className='p-4'></div>
-    </div>
+          <div className='p-4'></div>
+        </div>
+      )}
+    </>
   )
 }
 
