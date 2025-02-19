@@ -22,7 +22,7 @@ const Favourites = () => {
     };
     fetchFavourites();
   }, []);
-
+  
   // Function to update state when a book is removed
   const handleRemoveFavourite = (bookId) => {
     setFavouriteBooks((prevBooks) => prevBooks.filter((book) => book._id !== bookId));
