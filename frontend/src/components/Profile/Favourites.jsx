@@ -23,7 +23,6 @@ const Favourites = () => {
     fetchFavourites();
   }, []);
   
-  // Function to update state when a book is removed
   const handleRemoveFavourite = (bookId) => {
     setFavouriteBooks((prevBooks) => prevBooks.filter((book) => book._id !== bookId));
   };
@@ -32,11 +31,11 @@ const Favourites = () => {
     <>
       {FavouriteBooks && FavouriteBooks.length === 0 &&
         <div className="text-5xl font-sem
-        ibold h-[100%] text-zinc-500 flex items-center justify-center flex-col">
+        ibold h-[100%] text-zinc-500 flex items-center justify-center text-center flex-col">
           No Favourite Books
           <img src="./bookmark.png" alt="star" className="h-[20vh] my-8"/>
         </div>}
-      <div className="grid grid-cols-4">
+      <div className="grid lg:grid-cols-4">
       {FavouriteBooks.map((book) => (
         <div key={book._id}>
           <BookCard data={book} favourite={true} onRemove={handleRemoveFavourite} />

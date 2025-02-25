@@ -14,7 +14,7 @@ const BookCard = ({ data, favourite, onRemove }) => {
     try {
       const response = await axios.put("http://localhost:1000/api/v1/remove-book-from-favourites", {}, { headers });
       toast.success(response.data.message);
-      if (onRemove) onRemove(data._id); // Notify parent to update state
+      if (onRemove) onRemove(data._id); 
     } catch (error) {
       toast.error("Failed to remove book from favourites");
     }

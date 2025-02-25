@@ -4,7 +4,7 @@ const Book = require("../models/book");
 const Order = require("../models/order");
 const User = require("../models/user")
  
-router.post("/place-orer", authenticateToken, async (req, res) => {
+router.post("/place-order", authenticateToken, async (req, res) => {
   try {
     const { id } = req.headers;
     const { order } = req.body;
@@ -68,22 +68,44 @@ router.get("/get-all-orders", authenticateToken, async (req, res) => {
     return res.status(500).json({ message: "An error occurred" });
   }
 });
-
-router.put("/update-status/:id", authenticateToken, async (req, res) => {
+router.put("/update-status/:oid", authenticateToken, async (req, res) => {
   try {
-    const { id } = req.params;
-    const userData = User.findById(id);
-    if (userData.role != "admin") {
-      return res.status(500).json({ message: "UnAuthorized Access" });
+    const { id } = req.headers;
+    console.log("User ID from headers:", id);
+
+    if (!id) {
+      return res.status(400).json({ message: "User ID missing in headers" });
     }
-    await Order.findByIdAndUpdate(id, { status: req.body.status })
+
+    const userData = await User.findById(id);
+    console.log("User Data:", userData);
+
+    if (!userData || userData.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized Access" });
+    }
+
+    const { oid } = req.params;
+    console.log("Updating order status for Order ID:", oid, "New Status:", req.body.status);
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      oid,
+      { status: req.body.status },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
     return res.json({
       status: "Success",
-      message:"Status Updated Successfully"
-    })
+      message: "Status Updated Successfully",
+      updatedOrder,
+    });
   } catch (error) {
-    console.log(error);
+    console.error("Error in /update-status/:oid:", error);
     return res.status(500).json({ message: "An Error Occurred" });
   }
-})
+});
+
 module.exports = router;

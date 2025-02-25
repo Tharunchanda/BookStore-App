@@ -3,24 +3,34 @@ import { Link } from "react-router-dom";
 import { FaGripLines } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import {authActions} from "../store/auth.js";
 
 const Navbar = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const role = useSelector((state) => state.auth.role);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-
   const links = useMemo(() => {
-    return isLoggedIn
+  if (isLoggedIn) {
+    return role === "admin"
       ? [
           { title: "Home", link: "/" },
           { title: "All Books", link: "/all-books" },
           { title: "Cart", link: "/cart" },
-          { title: "Profile", link: "/profile" },
+          { title: "Admin Profile", link: "/profile" }, 
         ]
       : [
           { title: "Home", link: "/" },
           { title: "All Books", link: "/all-books" },
+          { title: "Cart", link: "/cart" },
+          { title: "Profile", link: "/profile" },
         ];
-  }, [isLoggedIn]);
+  }
+  
+  return [
+    { title: "Home", link: "/" },
+    { title: "All Books", link: "/all-books" },
+  ];
+}, [isLoggedIn, role]); 
 
   const toggleMobileNav = () => setIsMobileNavOpen((prev) => !prev);
 
@@ -42,7 +52,7 @@ const Navbar = () => {
           <div className="flex gap-x-4">
             {links.map((item, i) => (
               <div className="flex items-center justify-center">
-                {item.title === "Profile" ? (
+                {item.title === "Profile" || item.title === "Admin Profile" ? (
                   <Link
                   to={item.link}
                   className="px-6 py-2 text-white border border-blue-500 rounded hover:bg-white hover:text-zinc-800 transition-all duration-300 text-center"
