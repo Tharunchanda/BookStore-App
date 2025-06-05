@@ -20,7 +20,7 @@ A **MERN (MongoDB, Express.js, React.js, Node.js)** full-stack Book Store applic
 
 ## 🛠️ Technologies Used
 
-* **Frontend**: React.js, Redux, Axios, Bootstrap
+* **Frontend**: React.js, Tailwind CSS, Axios
 * **Backend**: Node.js, Express.js, MongoDB, Mongoose
 * **Authentication**: JWT (JSON Web Tokens)
 * **Version Control**: Git, GitHub([github.com][1])
