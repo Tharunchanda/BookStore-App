@@ -4,6 +4,8 @@
 A **MERN (MongoDB, Express.js, React.js, Node.js)** full-stack Book Store application with **Role-Based Access Control (RBAC)**. This application allows users to browse, add, edit, and delete books, with access controls based on user roles.
 
 ---
+![Sample Admin View](assets/image.png)
+
 
 ## 🚀 Features
 
