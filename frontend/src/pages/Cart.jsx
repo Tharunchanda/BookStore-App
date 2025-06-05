@@ -6,6 +6,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
+  const backendURL = import.meta.env.VITE_API_URL;
   const headers = {
     id: localStorage.getItem("id"),
     authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -13,15 +14,19 @@ const Cart = () => {
 
   const [Cart, setCart] = useState([]); 
   const [Total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true); // Add loading state
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCart = async () => {
+      setLoading(true); // Start loading
       try {
-        const response = await axios.get("http://localhost:1000/api/v1/get-user-cart", { headers });
+        const response = await axios.get(`${backendURL}/api/v1/get-user-cart`, { headers });
         setCart(response.data.data);
       } catch (error) {
         toast.error(error.message || "Error fetching cart");
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
     fetchCart();
@@ -34,7 +39,7 @@ const Cart = () => {
 
   const deleteItem = async (bookid) => {
     try {
-      await axios.put(`http://localhost:1000/api/v1/remove-from-cart/${bookid}`, {}, { headers });
+      await axios.put(`${backendURL}/api/v1/remove-from-cart/${bookid}`, {}, { headers });
       toast.success("Item removed from cart");
       setCart((prevCart) => prevCart.filter(item => item._id !== bookid));
     } catch (error) {
@@ -44,7 +49,7 @@ const Cart = () => {
 
   const PlaceOrder = async () => {
     try {
-      await axios.post("http://localhost:1000/api/v1/place-order", { order: Cart }, { headers });
+      await axios.post(`${backendURL}/api/v1/place-order`, { order: Cart }, { headers });
       toast.success("Order placed successfully");
       navigate('/profile/orderHistory');
     } catch (error) {
@@ -54,7 +59,11 @@ const Cart = () => {
 
   return (
     <div className='bg-zinc-900 px-4 md:px-12 min-h-screen py-8'>
-      {Cart.length === 0 ? (
+      {loading ? (
+        <div className='h-screen flex items-center justify-center'>
+          <Loader />
+        </div>
+      ) : Cart.length === 0 ? (
         <div className='h-screen flex flex-col items-center justify-center text-center'>
           <h1 className='text-4xl lg:text-6xl font-semibold text-zinc-400 mb-4'>Empty Cart</h1>
           <img src="/empty-cart.png" alt="empty cart" className='w-64 md:w-96' />
@@ -82,7 +91,7 @@ const Cart = () => {
         </div>
       )}
 
-      {Cart.length > 0 && (
+      {!loading && Cart.length > 0 && (
         <div className='fixed bottom-0 left-0 w-full bg-zinc-800 py-4 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center shadow-lg'>
           <div className='text-xl font-semibold text-zinc-200'>Total: ₹ {Total}</div>
           <button className='mt-3 md:mt-0 bg-green-500 text-white px-6 py-2 rounded hover:bg-green-700 transition' onClick={PlaceOrder}>

@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const UpdateBook = () => {
+  const backendURL = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const navigate = useNavigate();
   const role = useSelector((state) => state.auth?.role || "user");
@@ -25,7 +26,7 @@ const UpdateBook = () => {
   useEffect(() => {
     const fetchBookDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:1000/api/v1/get-book-by-id/${id}`);
+        const response = await axios.get(`${backendURL}/api/v1/get-book-by-id/${id}`);
         if (response.data && response.data.data) {
           setData(response.data.data);
         } else {
@@ -62,7 +63,7 @@ const UpdateBook = () => {
 
 
     try {
-      await axios.put(`http://localhost:1000/api/v1/update-book`, Data, { headers });
+      await axios.put(`${backendURL}/api/v1/update-book`, Data, { headers });
       toast.success("Book updated successfully!");
       navigate(`/view-book-details/${id}`);
     } catch (error) {

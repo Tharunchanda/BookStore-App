@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Loader from '../Loader/Loader';
 
 const Settings = () => {
+  const backendURL = import.meta.env.VITE_API_URL;
   const [Value, setValue] = useState({ address: "" });
   const [ProfileData, setProfileData] = useState()  
   const headers = {
@@ -17,7 +18,7 @@ const Settings = () => {
   useEffect(() => {
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:1000/api/v1/get-user-information", { headers });
+      const response = await axios.get(`${backendURL}/api/v1/get-user-information`, { headers });
       setProfileData(response.data);
       setValue({ address: response.data.address });
       
@@ -30,7 +31,7 @@ const Settings = () => {
 
   }, []); 
   const submitAddress = async () => {
-    const response = await axios.put("http://localhost:1000/api/v1/update-address", Value, { headers });
+    const response = await axios.put(`${backendURL}/api/v1/update-address`, Value, { headers });
     toast.success("Updated Successfully!");
   }
 

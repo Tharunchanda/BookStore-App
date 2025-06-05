@@ -4,15 +4,20 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const BookCard = ({ data, favourite, onRemove }) => {
+  const backendURL = import.meta.env.VITE_API_URL;
+
+  const userId = localStorage.getItem("id");
+  const token = localStorage.getItem("token");
+
   const headers = {
-    id: localStorage.getItem("id"),
-    authorization: `Bearer ${localStorage.getItem("token")}`,
+    id: userId || "",
+    authorization: token ? `Bearer ${token}` : "",
     bookid: data._id,
   };
 
   const handleRemoveBook = async () => {
     try {
-      const response = await axios.put("http://localhost:1000/api/v1/remove-book-from-favourites", {}, { headers });
+      const response = await axios.put(`${backendURL}/api/v1/remove-book-from-favourites`, {}, { headers });
       toast.success(response.data.message);
       if (onRemove) onRemove(data._id); 
     } catch (error) {
@@ -25,7 +30,12 @@ const BookCard = ({ data, favourite, onRemove }) => {
       <Link to={`/view-book-details/${data._id}`} className="block transition-transform transform hover:scale-105">
         <div className="bg-zinc-800 rounded-lg p-4 flex flex-col shadow-lg hover:shadow-xl">
           <div className="rounded-lg flex items-center justify-center overflow-hidden">
-            <img src={data.url} alt={data.title} className="h-[25vh] object-cover rounded-lg" loading="lazy" />
+            <img
+              src={data.url || "/default-book.png"}
+              alt={data.title}
+              className="h-[25vh] object-cover rounded-lg"
+              loading="lazy"
+            />
           </div>
           <h2 className="mt-4 text-lg text-zinc-100 font-semibold truncate">{data.title}</h2>
           <p className="mt-2 text-zinc-400 font-medium">by {data.author}</p>

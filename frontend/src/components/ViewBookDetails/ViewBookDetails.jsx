@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const ViewBookDetails = () => {
+  const backendURL = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState({});
@@ -19,7 +20,7 @@ const ViewBookDetails = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get(`http://localhost:1000/api/v1/get-book-by-id/${id}`);
+        const response = await axios.get(`${backendURL}/api/v1/get-book-by-id/${id}`);
         setData(response.data.data);
       } catch (error) {
         console.error("Error fetching book details:", error);
@@ -44,7 +45,7 @@ const ViewBookDetails = () => {
     }
     try {
       const response = await axios.put(
-        "http://localhost:1000/api/v1/add-book-to-favourites",
+        `${backendURL}/api/v1/add-book-to-favourites`,
         {},
         { headers }
       );
@@ -61,7 +62,7 @@ const ViewBookDetails = () => {
     }
     try {
       const response = await axios.put(
-        "http://localhost:1000/api/v1/add-to-cart",
+        `${backendURL}/api/v1/add-to-cart`,
         {},
         { headers }
       );
@@ -74,7 +75,7 @@ const ViewBookDetails = () => {
   const handleDelete = async () => {
     if (role !== "admin") return;
     try {
-      await axios.delete(`http://localhost:1000/api/v1/delete-book`, { headers });
+      await axios.delete(`${backendURL}/api/v1/delete-book`, { headers });
       toast.success("Book deleted successfully!");
       navigate("/all-books");
     } catch (error) {
@@ -85,7 +86,9 @@ const ViewBookDetails = () => {
   return (
     <>
       {loading ? (
-        <Loader />
+        <div className='flex items-center h-screen w-full justify-center flex-grow bg-zinc-900'>
+          <Loader />
+        </div>
       ) : data && Object.keys(data).length > 0 ? (
         <div className='px-4 md:px-12 py-8 bg-zinc-900 flex flex-col lg:flex-row gap-8 items-start'>
           <div className='w-full lg:w-3/6 '>

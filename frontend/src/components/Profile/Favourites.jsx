@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import BookCard from "../BookCard/BookCard";
 
 const Favourites = () => {
+  const backendURL = import.meta.env.VITE_API_URL;
   const [FavouriteBooks, setFavouriteBooks] = useState([]);
 
   const headers = {
@@ -14,7 +15,7 @@ const Favourites = () => {
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
-        const response = await axios.get("http://localhost:1000/api/v1/get-favourite-books", { headers });
+        const response = await axios.get(`${backendURL}/api/v1/get-favourite-books`, { headers });
         setFavouriteBooks(response.data.data);
       } catch (error) {
         toast.error("Failed to fetch favorite books");

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
 const UserOrderHistory = () => {
+  const backendURL = import.meta.env.VITE_API_URL;
   const [orderHistory, setOrderHistory] = useState(null);
 
   useEffect(() => {
@@ -14,7 +15,7 @@ const UserOrderHistory = () => {
           id: localStorage.getItem("id"),
           authorization: `Bearer ${localStorage.getItem("token")}`,
         };
-        const response = await axios.get("http://localhost:1000/api/v1/get-order-history", { headers });
+        const response = await axios.get(`${backendURL}/api/v1/get-order-history`, { headers });
         setOrderHistory(response.data.data);
       } catch (error) {
         toast.error("Failed to fetch order history");
@@ -26,7 +27,7 @@ const UserOrderHistory = () => {
   return (
     <div className='min-h-screen p-4 text-zinc-100 flex flex-col'>
       {!orderHistory ? (
-        <div className='flex items-center justify-center flex-grow'>
+        <div className='flex items-center h-screen w-full justify-center flex-grow'>
           <Loader />
         </div>
       ) : orderHistory.length === 0 ? (

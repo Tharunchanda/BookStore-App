@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 const AddBook = () => {
+  const backendURL = import.meta.env.VITE_API_URL;
   const [Data, setData] = useState({
     url: "",
     title: "",
@@ -33,7 +34,7 @@ const AddBook = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:1000/api/v1/add-book", 
+        `${backendURL}/api/v1/add-book`, 
         Data,
         { headers }
       );

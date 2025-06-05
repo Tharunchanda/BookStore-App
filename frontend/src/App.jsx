@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
 import { Routes, Route } from 'react-router-dom'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,7 +32,7 @@ function App() {
   },[])
   return (
     <div>
-      <ToastContainer/>
+      <ToastContainer autoClose={1250} />
         <Navbar />
         <Routes>
           <Route exact path='/' element={<Home />} />

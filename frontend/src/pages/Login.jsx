@@ -7,6 +7,7 @@ import { authActions } from "../components/store/auth.js";
 import { useDispatch } from "react-redux";
 
 const Login = () => {
+  const backendURL = import.meta.env.VITE_API_URL;
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -26,7 +27,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:1000/api/v1/sign-in", credentials);
+      const response = await axios.post(`${backendURL}/api/v1/sign-in`, credentials);
       toast.success("Login successful");
 
       dispatch(authActions.login());

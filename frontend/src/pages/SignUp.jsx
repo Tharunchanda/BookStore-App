@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const SignUp = () => { 
+  const backendURL = import.meta.env.VITE_API_URL;
   const [values, setValues] = useState({
     username: "",
     email: "",
@@ -43,7 +44,7 @@ const SignUp = () => {
   try {
     console.log("Sending Data:", values); // Debugging Line
 
-    const response = await axios.post("http://localhost:1000/api/v1/sign-up", values);
+    const response = await axios.post(`${backendURL}/api/v1/sign-up`, values);
 
     toast.success(response.data.message);
     navigate("/login");

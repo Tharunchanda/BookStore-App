@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import SeeUserData from './SeeUserData';
 
 const AllOrders = () => {
+  const backendURL = import.meta.env.VITE_API_URL;
   const [AllOrders, setAllOrders] = useState([]);
   const [Options, setOptions] = useState(-1);
   const [userDiv, setUserDiv] = useState("hidden");
@@ -23,7 +24,7 @@ const AllOrders = () => {
     let isMounted = true;
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:1000/api/v1/get-all-orders", { headers });
+        const response = await axios.get(`${backendURL}/api/v1/get-all-orders`, { headers });
         if (isMounted) setAllOrders(response.data.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -45,7 +46,7 @@ const AllOrders = () => {
     }
     try {
       const response = await axios.put(
-        `http://localhost:1000/api/v1/update-status/${orderId}`,
+        `${backendURL}/api/v1/update-status/${orderId}`,
         { status: Value },
         { headers }
       );
