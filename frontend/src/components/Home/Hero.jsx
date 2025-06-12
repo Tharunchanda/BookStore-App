@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <div className='flex flex-col lg:flex-row'> 
       <div className='w-full lg:w-3/6 flex flex-col items-center lg:items-start justify-center'>
@@ -11,7 +14,10 @@ const Hero = () => {
           Uncover captivating stories, enriching knowledge, and endless inspiration in our curated collection of books.
         </p>
         <div className='mt-8'>
-          <button className='text-yellow-100 text-xl lg:text-2xl border border-yellow-100 font-semibold px-10 py-3 rounded-full hover:bg-zinc-800 transition duration-300'>
+          <button
+            className='text-yellow-100 text-xl lg:text-2xl border border-yellow-100 font-semibold px-10 py-3 rounded-full hover:bg-zinc-800 transition duration-300'
+            onClick={() => navigate('/all-books')}
+          >
             Discover Books
           </button>
         </div>
